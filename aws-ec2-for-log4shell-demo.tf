@@ -1,5 +1,15 @@
 provider "aws" {
-  region     = var.aws_region
+  region = var.aws_region
+}
+
+terraform {
+  backend "remote" {
+    organization = "example-org-33046a"
+
+    workspaces {
+      name = "l4s-demo"
+    }
+  }
 }
 
 # ---------- variable definition ----------
@@ -14,10 +24,10 @@ variable "flow_log_bucket_name" {
 
 variable "s3_access_log_bucket_name" {
   description = "The name of the S3 bucket used to store access log (must be unique within an AWS partition)"
-} 
+}
 
 variable "ssh_allowed_host" {
-  type = string
+  type        = string
   description = "CIDR block allowed to ssh to the EC2 VM"
 }
 
@@ -35,12 +45,12 @@ variable "ec2_instance_type" {
 
 variable "pcc_username" {
   description = "Prisma Cloud username (for SaaS Console, it is the access key ID defined in Setings > Access Keys)"
-  sensitive = "true"
+  sensitive   = "true"
 }
 
 variable "pcc_password" {
   description = "Prisma Cloud password (for SaaS Console, it is the secret key defined in Setings > Access Keys)"
-  sensitive = "true"
+  sensitive   = "true"
 }
 
 variable "pcc_url" {
@@ -75,79 +85,10 @@ resource "aws_default_security_group" "default" {
   }
 }
 
-# Enable VPC flow log
-
-resource "aws_flow_log" "vpc_flow_log" {
-  log_destination      = aws_s3_bucket.vpc_flow_log.arn
-  log_destination_type = "s3"
-  traffic_type         = "ALL"
-  vpc_id               = aws_vpc.vpc1.id
-}
-
-# Create S3 bucket for storing flow log
-
-resource "aws_s3_bucket" "vpc_flow_log" {
-  bucket = var.flow_log_bucket_name
-  force_destroy = "true"
-  versioning {
-    enabled = true
-  }
-  logging {
-    target_bucket = aws_s3_bucket.s3_access_log.id
-    target_prefix = "log/"
-  }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "aws:kms"
-      }
-    }
-  }
-}
-
-# Block public access of the S3 bucket
-
-resource "aws_s3_bucket_public_access_block" "vpc_flow_log" {
-  bucket = aws_s3_bucket.vpc_flow_log.id
-
-  block_public_acls   = true
-  block_public_policy = true
-  ignore_public_acls = true
-  restrict_public_buckets = true
-}
-
-# Create S3 bucket for S3 access logging
-
-resource "aws_s3_bucket" "s3_access_log" {
-  bucket = var.s3_access_log_bucket_name
-  force_destroy = "true"
-  versioning {
-    enabled = true
-  }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "aws:kms"
-      }
-    }
-  }
-}
-
-# Block public access of the S3 bucket
-
-resource "aws_s3_bucket_public_access_block" "s3_access_log" {
-  bucket = aws_s3_bucket.s3_access_log.id
-
-  block_public_acls   = true
-  block_public_policy = true
-  ignore_public_acls = true
-  restrict_public_buckets = true
-}
-
 # Create vpc
 
 resource "aws_vpc" "vpc1" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = "true"
   tags = {
     Name = "VPC1"
@@ -232,12 +173,12 @@ resource "aws_security_group" "allow-ssh-web" {
 # Create Ubuntu EC2
 
 resource "aws_instance" "web-server" {
-  ami               = var.ec2_ami
-  instance_type     = var.ec2_instance_type
-  key_name          = var.ec2_key_pair_name
+  ami                         = var.ec2_ami
+  instance_type               = var.ec2_instance_type
+  key_name                    = var.ec2_key_pair_name
   associate_public_ip_address = "true"
-  subnet_id = aws_subnet.subnet-1.id
-  vpc_security_group_ids = [aws_security_group.allow-ssh-web.id]
+  subnet_id                   = aws_subnet.subnet-1.id
+  vpc_security_group_ids      = [aws_security_group.allow-ssh-web.id]
 
   user_data = <<-EOF
     #!/bin/bash
@@ -290,11 +231,11 @@ resource "aws_instance" "web-server" {
   }
   metadata_options {
     http_endpoint = "enabled"
-    http_tokens = "required"
+    http_tokens   = "required"
   }
-#   ebs_block_device {
-#     encrypted = true
-#   }
+  #   ebs_block_device {
+  #     encrypted = true
+  #   }
 }
 
 output "server_public_ip" {
