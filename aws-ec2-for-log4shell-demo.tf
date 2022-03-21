@@ -18,14 +18,6 @@ variable "aws_region" {
   description = "AWS region (e.g. us-east-2)"
 }
 
-variable "flow_log_bucket_name" {
-  description = "The name of the S3 bucket used to store VPC flow log (must be unique within an AWS partition)"
-}
-
-variable "s3_access_log_bucket_name" {
-  description = "The name of the S3 bucket used to store access log (must be unique within an AWS partition)"
-}
-
 variable "ssh_allowed_host" {
   type        = string
   description = "CIDR block allowed to ssh to the EC2 VM"
@@ -51,10 +43,6 @@ variable "pcc_username" {
 variable "pcc_password" {
   description = "Prisma Cloud password (for SaaS Console, it is the secret key defined in Setings > Access Keys)"
   sensitive   = "true"
-}
-
-variable "pcc_url" {
-  description = "Prisma Cloud Compute Console URL (for SaaS Console, the URL can be found in Compute > Manage > System > Utilities > Path to Console)"
 }
 
 variable "pcc_domain_name" {
