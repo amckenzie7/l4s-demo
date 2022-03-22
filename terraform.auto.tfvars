@@ -1,7 +1,7 @@
 aws_region = "us-east-1"
 
 ssh_allowed_host          = "0.0.0.0/0"
-ec2_key_pair_name         = "US-EAST-2-KP"
+ec2_key_pair_name         = "us-east-1-keypair"
 ec2_ami                   = "ami-0fb653ca2d3203ac1"
 ec2_instance_type         = "t2.micro"
 pcc_username              = "admin" # replace with secrets
