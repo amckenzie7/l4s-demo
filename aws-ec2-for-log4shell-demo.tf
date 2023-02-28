@@ -69,7 +69,9 @@ resource "aws_default_security_group" "default" {
   vpc_id = aws_vpc.vpc1.id
 
   tags = {
-    Name = "default SG"
+    Name     = "default SG"
+    git_org  = "amckenzie7"
+    git_repo = "l4s-demo"
   }
 }
 
@@ -79,7 +81,9 @@ resource "aws_vpc" "vpc1" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = "true"
   tags = {
-    Name = "VPC1"
+    Name     = "VPC1"
+    git_org  = "amckenzie7"
+    git_repo = "l4s-demo"
   }
 }
 
@@ -91,7 +95,9 @@ resource "aws_subnet" "subnet-1" {
   availability_zone = format("%sa", var.aws_region)
 
   tags = {
-    Name = "vpc1-subnet-1"
+    Name     = "vpc1-subnet-1"
+    git_org  = "amckenzie7"
+    git_repo = "l4s-demo"
   }
 }
 
@@ -99,6 +105,10 @@ resource "aws_subnet" "subnet-1" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc1.id
+  tags = {
+    git_org  = "amckenzie7"
+    git_repo = "l4s-demo"
+  }
 }
 
 # Attach Internet GW to default route table and setup default route
@@ -112,7 +122,9 @@ resource "aws_default_route_table" "default_route_table" {
   }
 
   tags = {
-    Name = "default-route-table"
+    Name     = "default-route-table"
+    git_org  = "amckenzie7"
+    git_repo = "l4s-demo"
   }
 }
 
@@ -161,7 +173,9 @@ resource "aws_security_group" "allow-ssh-web" {
   }
 
   tags = {
-    Name = "allow-ssh-web"
+    Name     = "allow-ssh-web"
+    git_org  = "amckenzie7"
+    git_repo = "l4s-demo"
   }
 }
 
@@ -218,7 +232,9 @@ resource "aws_instance" "web-server" {
     EOF
 
   tags = {
-    Name = "web-server"
+    Name     = "web-server"
+    git_org  = "amckenzie7"
+    git_repo = "l4s-demo"
   }
   monitoring = true
   root_block_device {
