@@ -70,6 +70,7 @@ resource "aws_default_security_group" "default" {
 
   tags = {
     Name = "default SG"
+    user = "pchandaliya"
   }
 }
 
@@ -80,6 +81,7 @@ resource "aws_vpc" "vpc1" {
   enable_dns_hostnames = "true"
   tags = {
     Name = "VPC1"
+    user = "pchandaliya"
   }
 }
 
@@ -92,6 +94,7 @@ resource "aws_subnet" "subnet-1" {
 
   tags = {
     Name = "vpc1-subnet-1"
+    user = "pchandaliya"
   }
 }
 
@@ -99,6 +102,9 @@ resource "aws_subnet" "subnet-1" {
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc1.id
+  tags = {
+    user = "pchandaliya"
+  }
 }
 
 # Attach Internet GW to default route table and setup default route
@@ -113,6 +119,7 @@ resource "aws_default_route_table" "default_route_table" {
 
   tags = {
     Name = "default-route-table"
+    user = "pchandaliya"
   }
 }
 
@@ -162,6 +169,7 @@ resource "aws_security_group" "allow-ssh-web" {
 
   tags = {
     Name = "allow-ssh-web"
+    user = "pchandaliya"
   }
 }
 
@@ -219,6 +227,7 @@ resource "aws_instance" "web-server" {
 
   tags = {
     Name = "web-server"
+    user = "pchandaliya"
   }
   monitoring = true
   root_block_device {
